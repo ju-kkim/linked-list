@@ -22,6 +22,38 @@ class VideoManager {
         this.print();
     }
 
+    insert(targetVideo, index) {
+        let video = this.head;
+        if ( video === undefined ) {
+            this.head = targetVideo;
+            this.print();
+            return
+        }
+        
+        if ( Number(index) === 0 ) {
+            targetVideo.next = video;
+            this.head = targetVideo;
+
+            this.print();
+            return
+        }
+
+        while ( --index !== 0 ) {
+            video = video.next
+            if( video === undefined ) {
+                this.add(targetVideo)
+                return
+            }
+        }
+
+        const nextVideo = video.next;
+        const addVideo = targetVideo;
+        video.next = addVideo
+        addVideo.next = nextVideo;
+        
+        this.print();
+    }
+
     print() {
         let video = this.head;
         let printMsg = `|---[${video.id}, ${video.playTime}sec]`;
@@ -53,6 +85,7 @@ function startEditVideo(data) {
             const editInfo = answer.split(' ')
             const targetId = editInfo[1];
             const targetVideo = videoData[targetId];
+            const targetIndex = editInfo[2];
             
             switch(editInfo[0]) {
                 case 'add' :
@@ -60,7 +93,11 @@ function startEditVideo(data) {
                     editVideo();
                     break
                 case 'insert' :
-                    console.log('insert')
+                    if (targetVideo && targetIndex){
+                        videoManager.insert(targetVideo, targetIndex)
+                    }else {
+                        console.log('입력을 다시해주세요')
+                    } 
                     editVideo();
                     break
                 case 'delete' :
